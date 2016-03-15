@@ -1,0 +1,20 @@
+{
+  "name": "json-api-express",
+  "version": "0.1.0",
+  "description": "Demo app built with Express, Mongoose to demonstrate a fully working JSON API implementation",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Kévin Danielo",
+  "dependencies": {
+    "async": "^1.5.2",
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "json-api-mongo-parser": "^0.3.0",
+    "json-api-serializer": "^0.2.0",
+    "lodash": "^4.6.1",
+    "mongoose": "^4.4.6",
+    "qs": "^6.1.0"
+  }
+}

@@ -1,41 +1,74 @@
 'use strict';
 
 var _ = require('lodash');
+var async = require('async');
 
 var mongooseAdapter = {};
 
-mongooseAdapter.find = function(model, query, callback) {
-  var dbQuery = model.find();
-
+var buildCollectionQuery = function(dbQuery, query) {
   // Select
   dbQuery.select(query.select);
+
   // Sort
   dbQuery.sort(query.sort);
+
   // Pagination
   if (query.page) {
     dbQuery.skip(query.page.skip);
     dbQuery.limit(query.page.limit);
   }
+
   // Populate
   if (query.populate) {
     dbQuery.populate(query.populate);
   }
+};
 
-  dbQuery.lean().exec(callback);
-}
+mongooseAdapter.find = function(model, query, callback) {
+  async.parallel({
+    total: function(cb) {
+      model.count(cb);
+    },
+    data: function(cb) {
+      var dbQuery = model.find().lean();
+      buildCollectionQuery(dbQuery, query);
+      dbQuery.exec(cb);
+    }
+  }, callback);
+};
+
+mongooseAdapter.findByIds = function(model, ids, query, callback) {
+  var conditions = {
+    _id: {
+      $in: ids
+    }
+  };
+
+  async.parallel({
+    total: function(cb) {
+      model.count(conditions).exec(cb);
+    },
+    data: function(cb) {
+      var dbQuery = model.find(conditions).lean();
+      buildCollectionQuery(dbQuery, query);
+      dbQuery.exec(cb);
+    }
+  }, callback);
+};
 
 mongooseAdapter.findById = function(model, id, query, callback) {
   var dbQuery = model.findById(id).lean();
 
   // Select
   dbQuery.select(query.select);
+
   // Populate
   if (query.populate) {
     dbQuery.populate(query.populate);
   }
 
   dbQuery.exec(callback);
-}
+};
 
 mongooseAdapter.findByIdAndUpdate = function(model, id, body, callback) {
   var update = {};
@@ -57,10 +90,9 @@ mongooseAdapter.findByIdAndUpdate = function(model, id, body, callback) {
   model.findByIdAndUpdate(id, update, {
     new: true
   }, callback);
-}
+};
 
 mongooseAdapter.findRelationship = function(model, id, relationship, relationshipModel, query, callback) {
-
   var dbQuery = model.findById(id).lean();
 
   dbQuery.exec(function(err, document) {
@@ -69,39 +101,21 @@ mongooseAdapter.findRelationship = function(model, id, relationship, relationshi
 
     // To many relationship
     if (_.isArray(relationshipId)) {
-      relationshipQuery = relationshipModel.find({
-        _id: {
-          $in: relationshipId
-        }
-      }).lean();
-      // To one relationship
-    } else {
-      relationshipQuery = relationshipModel.findById(relationshipId).lean();
+      mongooseAdapter.findByIds(relationshipModel, relationshipId, query, callback);
     }
-
-    // Select
-    relationshipQuery.select(query.select);
-    // Sort
-    relationshipQuery.sort(query.sort);
-    // Pagination
-    if (query.page) {
-      relationshipQuery.skip(query.page.skip);
-      relationshipQuery.limit(query.page.limit);
+    // To one relationship
+    else {
+      mongooseAdapter.findById(relationshipModel, relationshipId, query, callback);
     }
-    // Populate
-    if (query.populate) {
-      relationshipQuery.populate(query.populate);
-    }
-
-    relationshipQuery.exec(callback);
   });
-}
+};
 
 mongooseAdapter.save = function(model, body, callback) {
   var newObject = {};
 
   // Attributes
   Object.assign(newObject, body.attributes);
+
   // Relationships
   _.forOwn(body.relationships, function(value, key) {
     if (_.isArray(value.data)) {
@@ -116,6 +130,6 @@ mongooseAdapter.save = function(model, body, callback) {
   // Save
   var doc = new model(newObject);
   doc.save(callback);
-}
+};
 
 module.exports = mongooseAdapter;

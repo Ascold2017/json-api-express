@@ -5,7 +5,7 @@ var jsonApiMongoParser = require('../jsonapiMongoParser');
 var mongooseAdapter = require('../lib/mongoose-adapter');
 var Pagination = require('../lib/pagination');
 
-module.exports = function find(resource, model) {
+module.exports = function(resource, model) {
   return middleware;
 
   function middleware(req, res, next) {

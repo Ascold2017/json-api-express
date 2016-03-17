@@ -4,7 +4,7 @@ var jsonapiSerializer = require('../jsonapiSerializer');
 var jsonApiMongoParser = require('../jsonapiMongoParser');
 var mongooseAdapter = require('../lib/mongoose-adapter');
 
-module.exports = function find(resource, model) {
+module.exports = function(resource, model) {
   return middleware;
 
   function middleware(req, res, next) {

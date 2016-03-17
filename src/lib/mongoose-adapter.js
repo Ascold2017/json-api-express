@@ -81,7 +81,7 @@ mongooseAdapter.findByIdAndUpdate = function(model, id, body, callback) {
     if (_.isArray(value.data)) {
       update[key] = value.data.map(function(d) {
         return d.id;
-      })
+      });
     } else {
       update[key] = value.data.id;
     }
@@ -108,6 +108,22 @@ mongooseAdapter.findRelationship = function(model, id, relationship, relationshi
       mongooseAdapter.findById(relationshipModel, relationshipId, query, callback);
     }
   });
+};
+
+mongooseAdapter.updateRelationship = function(model, id, relationship, data, callback) {
+  var update = {};
+
+  if (_.isArray(data)) {
+    update[relationship] = data.map(function(d) {
+      return d.id;
+    });
+  } else {
+    update[relationship] = data.id;
+  }
+
+  model.findByIdAndUpdate(id, update, {
+    new: true
+  }, callback);
 };
 
 mongooseAdapter.save = function(model, body, callback) {

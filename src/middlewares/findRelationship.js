@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var jsonapiSerializer = require('../jsonapiSerializer');
 var jsonApiMongoParser = require('../jsonapiMongoParser');
 var mongooseAdapter = require('../lib/mongoose-adapter');
@@ -23,21 +25,20 @@ module.exports = function find(resource, model, relationship, relationshipType, 
 
       var extraOptions = {
         self: req.originalUrl
-      }
+      };
 
       // To many relationships
       if (results.data) {
         // Pagination links
-        var paginationLinks = new Pagination(req.query.page, results.total).getLinks(req.originalUrl);
-        extraOptions = {
-          total: results.total,
-          count: results.data.length,
-          self: req.originalUrl,
-          first: paginationLinks.first,
-          last: paginationLinks.last,
-          prev: paginationLinks.prev,
-          next: paginationLinks.next
-        };
+        var pagination = new Pagination(req.query.page, results.total);
+        var paginationLinks = pagination.getLinks(req.originalUrl);
+
+        // Extra options
+        extraOptions = _.assign(extraOptions, {
+            count: results.data.length
+          },
+          _.pick(pagination, ['total', 'totalPage', 'number', 'size', 'offset', 'limit']),
+          _.pick(paginationLinks, ['self', 'first', 'last', 'prev', 'next']));
       }
 
       results = results.data || results;

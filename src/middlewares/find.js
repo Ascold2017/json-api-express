@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var jsonapiSerializer = require('../jsonapiSerializer');
 var jsonApiMongoParser = require('../jsonapiMongoParser');
 var mongooseAdapter = require('../lib/mongoose-adapter');
@@ -23,17 +25,15 @@ module.exports = function find(resource, model) {
       }
 
       // Pagination links
-      var paginationLinks = new Pagination(req.query.page, results.total).getLinks(req.originalUrl);
+      var pagination = new Pagination(req.query.page, results.total);
+      var paginationLinks = pagination.getLinks(req.originalUrl);
 
-      var extraOptions = {
-        total: results.total,
-        count: results.data.length,
-        self: req.originalUrl,
-        first: paginationLinks.first,
-        last: paginationLinks.last,
-        prev: paginationLinks.prev,
-        next: paginationLinks.next
-      };
+      // Extra options
+      var extraOptions = _.assign({
+          count: results.data.length
+        },
+        _.pick(pagination, ['total', 'totalPage', 'number', 'size', 'offset', 'limit']),
+        _.pick(paginationLinks, ['self', 'first', 'last', 'prev', 'next']));
 
       // Serialize
       res.send(jsonapiSerializer.serialize(resource, results.data, extraOptions));

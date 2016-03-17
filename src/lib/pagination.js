@@ -3,16 +3,14 @@ var url = require('url');
 var _ = require('lodash');
 
 function Pagination(pageQuery, total) {
-  this.pagination = null;
-
   // Select the pagination strategy
   if (pageQuery) {
     if (pageQuery.number != null) {
-      this.pagination = new PaginationPage(pageQuery.number, pageQuery.size, total);
+      _.assign(this, new PaginationPage(pageQuery.number, pageQuery.size, total));
     }
 
     if (pageQuery.offset != null) {
-      this.pagination = new PaginationOffset(pageQuery.offset, pageQuery.limit, total);
+      _.assign(this, new PaginationOffset(pageQuery.offset, pageQuery.limit, total));
     }
   }
 }
@@ -22,8 +20,8 @@ Pagination.prototype.getLinks = function(uri) {
   var links = {};
 
   var buildPageQuery = function(offsetNumber, limitSize) {
-    var firstParam = that.pagination.number ? 'number' : 'offset';
-    var secondParam = that.pagination.number ? 'size' : 'limit';
+    var firstParam = that.number ? 'number' : 'offset';
+    var secondParam = that.number ? 'size' : 'limit';
 
     var pagination = {};
     pagination.page = {};
@@ -34,14 +32,13 @@ Pagination.prototype.getLinks = function(uri) {
   };
 
   links.self = uri;
-
-  links.first = paginationLinks(uri, buildPageQuery(this.pagination.first, this.pagination.limit));
-  links.last = paginationLinks(uri, buildPageQuery(this.pagination.last, this.pagination.limit));
-  if (this.pagination.prev != null) {
-    links.prev = paginationLinks(uri, buildPageQuery(this.pagination.prev, this.pagination.limit));
+  links.first = paginationLinks(uri, buildPageQuery(this.first, this.limit));
+  links.last = paginationLinks(uri, buildPageQuery(this.last, this.limit));
+  if (this.prev != null) {
+    links.prev = paginationLinks(uri, buildPageQuery(this.prev, this.limit));
   }
-  if (this.pagination.next != null) {
-    links.next = paginationLinks(uri, buildPageQuery(this.pagination.next, this.pagination.limit));
+  if (this.next != null) {
+    links.next = paginationLinks(uri, buildPageQuery(this.next, this.limit));
   }
 
   return links;
@@ -55,6 +52,8 @@ function PaginationOffset(offset, limit, total) {
   var lastOffset = total - ((total % limit) || limit);
   var prevOffset = offset - limit;
 
+  this.total = total;
+  this.offset = offset;
   this.limit = limit;
   this.first = 0;
   this.last = lastOffset > 0 ? lastOffset : 0;
@@ -64,14 +63,15 @@ function PaginationOffset(offset, limit, total) {
 
 function PaginationPage(number, size, total) {
   number = Number(number);
-  limit = Number(size);
+  size = Number(size);
   total = Number(total);
 
-  var totalPage = Math.ceil(total / limit);
+  var totalPage = Math.ceil(total / size);
 
+  this.total = total;
   this.totalPage = totalPage;
   this.number = number;
-  this.limit = limit;
+  this.size = size;
   this.first = 1;
   this.last = totalPage === 0 ? 1 : totalPage;
   this.prev = number > 1 ? number - 1 : null;

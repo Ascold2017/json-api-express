@@ -10,8 +10,23 @@ module.exports = {
     total: function(extraOptions) {
       return extraOptions.total;
     },
+    totalPage: function(extraOptions) {
+      return extraOptions.totalPage;
+    },
     count: function(extraOptions) {
       return extraOptions.count;
+    },
+    offset: function(extraOptions) {
+      return extraOptions.offset;
+    },
+    limit: function(extraOptions) {
+      return extraOptions.limit;
+    },
+    number: function(extraOptions) {
+      return extraOptions.number;
+    },
+    size: function(extraOptions) {
+      return extraOptions.size;
     }
   },
   topLevelLinks: {

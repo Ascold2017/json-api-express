@@ -12,6 +12,8 @@ var patch = require('../middlewares/patch');
 var findRelationship = require('../middlewares/findRelationship');
 var getRelationship = require('../middlewares/getRelationship');
 var patchRelationship = require('../middlewares/patchRelationship');
+var postRelationship = require('../middlewares/postRelationship');
+var deleteRelationship = require('../middlewares/deleteRelationship');
 
 var router = express.Router();
 
@@ -24,5 +26,7 @@ router.get('/articles/:id/tag', findRelationship('article', ArticleModel, 'tag',
 router.get('/articles/:id/comments', findRelationship('article', ArticleModel, 'comments', 'comment', CommentModel));
 router.get('/articles/:id/relationships/:relationship', getRelationship('article', ArticleModel));
 router.patch('/articles/:id/relationships/:relationship', patchRelationship('article', ArticleModel));
+router.post('/articles/:id/relationships/:relationship', postRelationship('article', ArticleModel));
+router.delete('/articles/:id/relationships/:relationship', deleteRelationship('article', ArticleModel));
 
 module.exports = router;

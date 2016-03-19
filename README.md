@@ -1,7 +1,7 @@
 # json-api-express
 Demo app built with Express, Mongoose to demonstrate a fully working [JSON API](http://jsonapi.org/) implementation.
 
-It is a work in progress. Some features need to be implement to have a complete working example API. Some missing features : Errors, Payload validation, Post, Patch, etc...
+It is a work in progress. Some features need to be implement to have a complete working example API. Some missing features : Errors, Payload validation, etc...
 
 Feel free to contribute to build a fully working [JSON API](http://jsonapi.org/) example.
 

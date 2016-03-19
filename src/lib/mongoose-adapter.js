@@ -126,6 +126,30 @@ mongooseAdapter.updateRelationship = function(model, id, relationship, data, cal
   }, callback);
 };
 
+mongooseAdapter.createRelationship = function(model, id, relationship, data, callback) {
+
+  model.findById(id, function(err, result) {
+    result[relationship] = _.concat(result[relationship], data.map(function(d) {
+      return d.id;
+    }));
+
+    result.save(callback);
+  });
+};
+
+mongooseAdapter.deleteRelationship = function(model, id, relationship, data, callback) {
+
+  model.findById(id, function(err, result) {
+    console.log(result[relationship].toObject());
+    result[relationship] = _.difference(result[relationship].toString(), data.map(function(d) {
+      return d.id;
+    }));
+
+    result.save(callback);
+  });
+};
+
+
 mongooseAdapter.save = function(model, body, callback) {
   var newObject = {};
 

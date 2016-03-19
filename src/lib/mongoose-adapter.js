@@ -140,7 +140,6 @@ mongooseAdapter.createRelationship = function(model, id, relationship, data, cal
 mongooseAdapter.deleteRelationship = function(model, id, relationship, data, callback) {
 
   model.findById(id, function(err, result) {
-    console.log(result[relationship].toObject());
     result[relationship] = _.difference(result[relationship].toString(), data.map(function(d) {
       return d.id;
     }));

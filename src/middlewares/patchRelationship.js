@@ -6,7 +6,6 @@ module.exports = function(resource, model) {
   return middleware;
 
   function middleware(req, res, next) {
-    console.log(req.body);
     mongooseAdapter.updateRelationship(model, req.params.id, req.params.relationship, req.body.data, function(err, document) {
       res.send(jsonapiSerializer.serialize(resource, document.toObject()));
     });

@@ -1,6 +1,6 @@
 module.exports = {
   id: '_id',
-  blackList: ['__v'],
+  blacklist: ['__v'],
   links: {
     self: function(data) {
       return '/articles/' + data._id;

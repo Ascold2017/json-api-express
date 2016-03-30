@@ -12,7 +12,7 @@
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
     "json-api-mongo-parser": "^0.3.0",
-    "json-api-serializer": "^0.2.0",
+    "json-api-serializer": "^0.3.0",
     "lodash": "^4.6.1",
     "mongoose": "^4.4.6",
     "qs": "^6.1.0"

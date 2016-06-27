@@ -1,0 +1,1045 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "json-api-express",
+        "description": "Demo app built with Express, Mongoose to demonstrate a fully working JSON API (http://jsonapi.org/) implementation"
+    },
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/vnd.api+json"
+    ],
+    "produces": [
+        "application/vnd.api+json"
+    ],
+    "paths": {
+        "/articles": {
+            "get": {
+                "tags": [
+                    "article"
+                ],
+                "description": "Description of articles endpoint\n",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/fieldsArticle"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsPeople"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsComment"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsTag"
+                    },
+                    {
+                        "$ref": "#/parameters/sort"
+                    },
+                    {
+                        "$ref": "#/parameters/pageNumber"
+                    },
+                    {
+                        "$ref": "#/parameters/pageSize"
+                    },
+                    {
+                        "$ref": "#/parameters/pageOffset"
+                    },
+                    {
+                        "$ref": "#/parameters/pageLimit"
+                    },
+                    {
+                        "$ref": "#/parameters/include"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "links",
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "$ref": "#/definitions/meta"
+                                },
+                                "links": {
+                                    "$ref": "#/definitions/links"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/article"
+                                    }
+                                },
+                                "included": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "article"
+                ],
+                "description": "Description of articles endpoint\n",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "TODO",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/definitions/article"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "type": "object"
+                                },
+                                "links": {
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/article"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{id}": {
+            "get": {
+                "tags": [
+                    "article"
+                ],
+                "description": "Get a specific instance of articles",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/fieldsArticle"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsPeople"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsComment"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsTag"
+                    },
+                    {
+                        "$ref": "#/parameters/include"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "links",
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "$ref": "#/definitions/meta"
+                                },
+                                "links": {
+                                    "$ref": "#/definitions/links"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/article"
+                                },
+                                "included": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "article"
+                ],
+                "description": "Delete an instance of articles",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "articles delete response",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "type": "object"
+                                },
+                                "links": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "article"
+                ],
+                "description": "Update an instance of articles",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "New or partial resource",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/definitions/article"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "articles update response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "type": "object"
+                                },
+                                "links": {
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/article"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{id}/author": {
+            "get": {
+                "tags": [
+                    "article",
+                    "people"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsPeople"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people find response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "links",
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "$ref": "#/definitions/meta"
+                                },
+                                "links": {
+                                    "$ref": "#/definitions/links"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/people"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{id}/tag": {
+            "get": {
+                "tags": [
+                    "article",
+                    "tag"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsTag"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people find response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "links",
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "$ref": "#/definitions/meta"
+                                },
+                                "links": {
+                                    "$ref": "#/definitions/links"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/tag"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{id}/comments": {
+            "get": {
+                "tags": [
+                    "article",
+                    "comment"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/fieldsComment"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people find response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "links",
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "$ref": "#/definitions/meta"
+                                },
+                                "links": {
+                                    "$ref": "#/definitions/links"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/comment"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{id}/relationships/author": {
+            "get": {
+                "tags": [
+                    "article",
+                    "people"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people find response",
+                        "schema": {
+                            "$ref": "#/definitions/toOneRelationship"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "article",
+                    "people"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "New or partial resource",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/toOneRelationship"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people update response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object",
+                                    "required": [
+                                        "version"
+                                    ],
+                                    "properties": {
+                                        "version": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "meta": {
+                                    "type": "object"
+                                },
+                                "links": {
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/toOneRelationship"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{id}/relationships/tag": {
+            "get": {
+                "tags": [
+                    "article",
+                    "tag"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people find response",
+                        "schema": {
+                            "$ref": "#/definitions/toOneRelationship"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "article",
+                    "tag"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "New or partial resource",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/toOneRelationship"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people update response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object",
+                                    "required": [
+                                        "version"
+                                    ],
+                                    "properties": {
+                                        "version": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "meta": {
+                                    "type": "object"
+                                },
+                                "links": {
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/toOneRelationship"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{id}/relationships/comment": {
+            "get": {
+                "tags": [
+                    "article",
+                    "comment"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people find response",
+                        "schema": {
+                            "$ref": "#/definitions/toManyRelationship"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "article",
+                    "comment"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id of specific instance to lookup",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "New or partial resource",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/toManyRelationship"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "people update response",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "data"
+                            ],
+                            "properties": {
+                                "jsonapi": {
+                                    "type": "object",
+                                    "required": [
+                                        "version"
+                                    ],
+                                    "properties": {
+                                        "version": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "meta": {
+                                    "type": "object"
+                                },
+                                "links": {
+                                    "type": "object"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/toManyRelationship"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "fieldsArticle": {
+            "name": "fields[article]",
+            "in": "query",
+            "description": "Limit response payloads for the article resource type",
+            "type": "string"
+        },
+        "fieldsPeople": {
+            "name": "fields[people]",
+            "in": "query",
+            "description": "Limit response payloads for the people resource type",
+            "type": "string"
+        },
+        "fieldsComment": {
+            "name": "fields[comment]",
+            "in": "query",
+            "description": "Limit response payloads for the comment resource type",
+            "type": "string"
+        },
+        "fieldsTag": {
+            "name": "fields[tag]",
+            "in": "query",
+            "description": "Limit response payloads for the tag resource type",
+            "type": "string"
+        },
+        "sort": {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort resource collections according to one or more fields by allowing comma-separated (',') sort fields.\n\n http://jsonapi.org/format/#fetching-sorting",
+            "type": "string"
+        },
+        "pageNumber": {
+            "name": "page[number]",
+            "in": "query",
+            "description": "Page-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
+            "required": false,
+            "type": "number",
+            "format": "int32"
+        },
+        "pageSize": {
+            "name": "page[size]",
+            "in": "query",
+            "description": "Page-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
+            "required": false,
+            "type": "number",
+            "format": "int32"
+        },
+        "pageOffset": {
+            "name": "page[offset]",
+            "in": "query",
+            "description": "Offset-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
+            "required": false,
+            "type": "number",
+            "format": "int32"
+        },
+        "pageLimit": {
+            "name": "page[limit]",
+            "in": "query",
+            "description": "Offset-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
+            "required": false,
+            "type": "number",
+            "format": "int32"
+        },
+        "include": {
+            "name": "include",
+            "in": "query",
+            "description": "Fetch related resources (relationships) of the primary data \n\n http://jsonapi.org/format/#fetching-includes",
+            "type": "string"
+        }
+    },
+    "definitions": {
+        "toOneRelationship": {
+            "type": "object",
+            "required": [
+                "links",
+                "data"
+            ],
+            "properties": {
+                "meta": {
+                    "type": "object"
+                },
+                "links": {
+                    "type": "object",
+                    "required": [
+                        "self"
+                    ],
+                    "properties": {
+                        "self": {
+                            "type": "string"
+                        },
+                        "related": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "data": {
+                    "type": "object",
+                    "required": [
+                        "type",
+                        "id"
+                    ],
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "toManyRelationship": {
+            "type": "object",
+            "required": [
+                "links",
+                "data"
+            ],
+            "properties": {
+                "meta": {
+                    "type": "object"
+                },
+                "links": {
+                    "type": "object",
+                    "required": [
+                        "self"
+                    ],
+                    "properties": {
+                        "self": {
+                            "type": "string"
+                        },
+                        "related": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "id"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "total": {
+                    "type": "integer"
+                },
+                "totalPage": {
+                    "type": "integer"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "number": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
+        },
+        "links": {
+            "type": "object",
+            "required": [
+                "self"
+            ],
+            "properties": {
+                "self": {
+                    "type": "string"
+                },
+                "first": {
+                    "type": "string"
+                },
+                "last": {
+                    "type": "string"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "prev": {
+                    "type": "string"
+                }
+            }
+        },
+        "article": {
+            "description": "TODO",
+            "type": "object",
+            "required": [
+                "type",
+                "attributes"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "attributes": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string"
+                        },
+                        "body": {
+                            "type": "string"
+                        },
+                        "created": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    }
+                },
+                "relationships": {
+                    "type": "object",
+                    "properties": {
+                        "author": {
+                            "$ref": "#/definitions/toOneRelationship"
+                        },
+                        "tag": {
+                            "$ref": "#/definitions/toOneRelationship"
+                        },
+                        "comments": {
+                            "$ref": "#/definitions/toManyRelationship"
+                        }
+                    }
+                },
+                "links": {
+                    "$ref": "#/definitions/links"
+                }
+            }
+        },
+        "people": {
+            "description": "TODO",
+            "type": "object",
+            "required": [
+                "id",
+                "type",
+                "attributes"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "attributes": {
+                    "type": "object",
+                    "properties": {
+                        "firstName": {
+                            "type": "string"
+                        },
+                        "lastName": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "age": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "gender": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "links": {
+                    "$ref": "#/definitions/links"
+                }
+            }
+        },
+        "tag": {
+            "description": "TODO",
+            "type": "object",
+            "required": [
+                "id",
+                "type",
+                "attributes"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "attributes": {
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string"
+                        },
+                        "created": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "links": {
+                    "$ref": "#/definitions/links"
+                }
+            }
+        },
+        "comment": {
+            "description": "TODO",
+            "type": "object",
+            "required": [
+                "id",
+                "type",
+                "attributes"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "attributes": {
+                    "type": "object",
+                    "properties": {
+                        "body": {
+                            "type": "string"
+                        },
+                        "created": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "relationships": {
+                    "type": "object",
+                    "properties": {
+                        "author": {
+                            "$ref": "#/definitions/toOneRelationship"
+                        }
+                    }
+                },
+                "links": {
+                    "$ref": "#/definitions/links"
+                }
+            }
+        }
+    }
+}

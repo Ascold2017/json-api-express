@@ -7,10 +7,10 @@ Feel free to contribute to build a fully working [JSON API](http://jsonapi.org/)
 
 ## Installation
 
-1. Clone repo
+1. `git clone https://github.com/danivek/json-api-express.git`
 2. `npm install`
 3. `npm start`
-4. Browse http://localhost:8080
+4. Browse http://localhost:8080/docs
 
 ## Usage
 
@@ -25,6 +25,8 @@ Try some endpoints :
  * http://localhost:8080/comments
  * http://localhost:8080/tags
  * ...
+
+Or explore api endpoints with swagger-ui at : http://localhost:8080/docs
 
 ## Features
  * [Sparse Fieldsets](http://jsonapi.org/format/#fetching-sparse-fieldsets)

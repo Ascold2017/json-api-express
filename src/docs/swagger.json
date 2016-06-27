@@ -713,7 +713,7 @@
             "in": "query",
             "description": "Page-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
             "required": false,
-            "type": "number",
+            "type": "integer",
             "format": "int32"
         },
         "pageSize": {
@@ -721,7 +721,7 @@
             "in": "query",
             "description": "Page-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
             "required": false,
-            "type": "number",
+            "type": "integer",
             "format": "int32"
         },
         "pageOffset": {
@@ -729,7 +729,7 @@
             "in": "query",
             "description": "Offset-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
             "required": false,
-            "type": "number",
+            "type": "integer",
             "format": "int32"
         },
         "pageLimit": {
@@ -737,7 +737,7 @@
             "in": "query",
             "description": "Offset-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
             "required": false,
-            "type": "number",
+            "type": "integer",
             "format": "int32"
         },
         "include": {

@@ -4,17 +4,17 @@ var jsonapiSerializer = require('../jsonapiSerializer');
 var jsonApiMongoParser = require('../jsonapiMongoParser');
 var mongooseAdapter = require('../lib/mongoose-adapter');
 
-module.exports = function(resource, model) {
+module.exports = function(resource, model, relationship) {
   return middleware;
 
-  function middleware(req, res, next) {
+  function middleware(req, res) {
     // Query
     mongooseAdapter.findById(model, req.params.id, jsonApiMongoParser.parse(resource, req.query), function(err, document) {
       // Serialize
-      serializedData = jsonapiSerializer.serialize(resource, document);
+      var serializedData = jsonapiSerializer.serialize(resource, document);
 
       // serialized relationship
-      var serializedRelationship = serializedData.data.relationships[req.params.relationship];
+      var serializedRelationship = serializedData.data.relationships[relationship];
 
       // Response
       var response = {};
@@ -23,7 +23,7 @@ module.exports = function(resource, model) {
       if (_.isArray(serializedRelationship.data)) {
         response.meta = {
           count: serializedRelationship.data.length
-        }
+        };
       }
       // Links + data
       _.assign(response, serializedRelationship);
@@ -32,4 +32,4 @@ module.exports = function(resource, model) {
       res.send(response);
     });
   }
-}
+};

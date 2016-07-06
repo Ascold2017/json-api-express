@@ -97,7 +97,6 @@ mongooseAdapter.findRelationship = function(model, id, relationship, relationshi
 
   dbQuery.exec(function(err, document) {
     var relationshipId = document[relationship];
-    var relationshipQuery;
 
     // To many relationship
     if (_.isArray(relationshipId)) {

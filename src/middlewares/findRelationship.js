@@ -18,7 +18,7 @@ module.exports = function(resource, model, relationship, relationshipType, relat
 
     req.query.page = req.query.page || defaultPagination;
 
-    mongooseAdapter.findRelationship(model, req.params.id, relationship, relationshipModel, jsonApiMongoParser.parse(resource, req.query), function(err, results) {
+    mongooseAdapter.findRelationship(model, req.params.id, relationship, relationshipModel, jsonApiMongoParser.parse(relationshipType, req.query), function(err, results) {
       if (err) {
         next(err);
       }

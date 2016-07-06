@@ -14,6 +14,7 @@ module.exports = function(resource, model) {
         self: req.originalUrl
       };
 
+      res.setHeader('Content-Type', 'application/vnd.api+json; charset=utf-8');
       res.send(jsonapiSerializer.serialize(resource, document, extraOptions));
     });
   }

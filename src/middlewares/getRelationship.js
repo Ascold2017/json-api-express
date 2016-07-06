@@ -28,7 +28,7 @@ module.exports = function(resource, model, relationship) {
       // Links + data
       _.assign(response, serializedRelationship);
 
-
+      res.setHeader('Content-Type', 'application/vnd.api+json; charset=utf-8');
       res.send(response);
     });
   }

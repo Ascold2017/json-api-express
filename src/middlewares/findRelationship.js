@@ -42,6 +42,8 @@ module.exports = function(resource, model, relationship, relationshipType, relat
       }
 
       results = results.data || results;
+
+      res.setHeader('Content-Type', 'application/vnd.api+json; charset=utf-8');
       res.send(jsonapiSerializer.serialize(relationshipType, results, extraOptions));
     });
   }

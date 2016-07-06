@@ -36,6 +36,7 @@ module.exports = function(resource, model) {
         _.pick(paginationLinks, ['self', 'first', 'last', 'prev', 'next']));
 
       // Serialize
+      res.setHeader('Content-Type', 'application/vnd.api+json; charset=utf-8');
       res.send(jsonapiSerializer.serialize(resource, results.data, extraOptions));
     });
   }

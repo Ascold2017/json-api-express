@@ -20,7 +20,7 @@
                 "tags": [
                     "article"
                 ],
-                "description": "Description of articles endpoint\n",
+                "description": "Find articles",
                 "parameters": [
                     {
                         "$ref": "#/parameters/fieldsArticle"
@@ -93,12 +93,12 @@
                 "tags": [
                     "article"
                 ],
-                "description": "Description of articles endpoint\n",
+                "description": "Create an article",
                 "parameters": [
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "TODO",
+                        "description": "Article resource to be created",
                         "required": true,
                         "schema": {
                             "type": "object",
@@ -145,7 +145,7 @@
                 "tags": [
                     "article"
                 ],
-                "description": "Get a specific instance of articles",
+                "description": "Find article by id",
                 "parameters": [
                     {
                         "$ref": "#/parameters/fieldsArticle"
@@ -165,14 +165,14 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "TODO",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -207,19 +207,19 @@
                 "tags": [
                     "article"
                 ],
-                "description": "Delete an instance of articles",
+                "description": "Delete an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to delete",
                         "required": true,
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "articles delete response",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "properties": {
@@ -241,19 +241,19 @@
                 "tags": [
                     "article"
                 ],
-                "description": "Update an instance of articles",
+                "description": "Update an existing article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to update",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "name": "body",
                         "in": "body",
-                        "description": "New or partial resource",
+                        "description": "New or partial article resource",
                         "required": true,
                         "schema": {
                             "type": "object",
@@ -267,7 +267,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "articles update response",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -298,11 +298,12 @@
                     "article",
                     "people"
                 ],
+                "description": "Get the author of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     },
@@ -312,7 +313,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "people find response",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -344,11 +345,12 @@
                     "article",
                     "tag"
                 ],
+                "description": "Get the tag of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     },
@@ -358,7 +360,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "people find response",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -390,11 +392,12 @@
                     "article",
                     "comment"
                 ],
+                "description": "Get the list of comments of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     },
@@ -404,7 +407,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "people find response",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -436,18 +439,19 @@
                     "article",
                     "people"
                 ],
+                "description": "Get the author relationship of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "people find response",
+                        "description": "Successful response",
                         "schema": {
                             "$ref": "#/definitions/toOneRelationship"
                         }
@@ -459,18 +463,19 @@
                     "article",
                     "people"
                 ],
+                "description": "Update the author relationship of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "New or partial resource",
+                        "description": "An author relationship",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/toOneRelationship"
@@ -479,7 +484,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "people update response",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -518,18 +523,19 @@
                     "article",
                     "tag"
                 ],
+                "description": "Get the tag relationship of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "people find response",
+                        "description": "Successful response",
                         "schema": {
                             "$ref": "#/definitions/toOneRelationship"
                         }
@@ -541,18 +547,19 @@
                     "article",
                     "tag"
                 ],
+                "description": "Update the tag relationship of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "New or partial resource",
+                        "description": "A tag relationship",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/toOneRelationship"
@@ -561,7 +568,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "people update response",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -600,18 +607,19 @@
                     "article",
                     "comment"
                 ],
+                "description": "Get the comment relationships list of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "people find response",
+                        "description": "Successful response",
                         "schema": {
                             "$ref": "#/definitions/toManyRelationship"
                         }
@@ -623,18 +631,19 @@
                     "article",
                     "comment"
                 ],
+                "description": "Update the comment relationships list of an article",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "id of specific instance to lookup",
+                        "description": "Article id to fetch",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "New or partial resource",
+                        "description": "A comment relationship list",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/toManyRelationship"
@@ -643,7 +652,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "people update response",
+                        "description": "Successful response",
                         "schema": {
                             "type": "object",
                             "required": [
@@ -883,7 +892,7 @@
             }
         },
         "article": {
-            "description": "TODO",
+            "description": "Article resource",
             "type": "object",
             "required": [
                 "type",
@@ -931,7 +940,7 @@
             }
         },
         "people": {
-            "description": "TODO",
+            "description": "People resource",
             "type": "object",
             "required": [
                 "id",
@@ -972,7 +981,7 @@
             }
         },
         "tag": {
-            "description": "TODO",
+            "description": "Tag resource",
             "type": "object",
             "required": [
                 "id",
@@ -1003,7 +1012,7 @@
             }
         },
         "comment": {
-            "description": "TODO",
+            "description": "Comment resource",
             "type": "object",
             "required": [
                 "id",

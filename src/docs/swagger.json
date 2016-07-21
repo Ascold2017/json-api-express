@@ -1,1054 +1,1731 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "version": "1.0.0",
-        "title": "json-api-express",
-        "description": "Demo app built with Express, Mongoose to demonstrate a fully working JSON API (http://jsonapi.org/) implementation"
-    },
-    "schemes": [
-        "http"
-    ],
-    "consumes": [
-        "application/vnd.api+json"
-    ],
-    "produces": [
-        "application/vnd.api+json"
-    ],
-    "paths": {
-        "/articles": {
-            "get": {
-                "tags": [
-                    "article"
-                ],
-                "description": "Find articles",
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/fieldsArticle"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsPeople"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsComment"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsTag"
-                    },
-                    {
-                        "$ref": "#/parameters/sort"
-                    },
-                    {
-                        "$ref": "#/parameters/pageNumber"
-                    },
-                    {
-                        "$ref": "#/parameters/pageSize"
-                    },
-                    {
-                        "$ref": "#/parameters/pageOffset"
-                    },
-                    {
-                        "$ref": "#/parameters/pageLimit"
-                    },
-                    {
-                        "$ref": "#/parameters/include"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "links",
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "$ref": "#/definitions/meta"
-                                },
-                                "links": {
-                                    "$ref": "#/definitions/links"
-                                },
-                                "data": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/article"
-                                    }
-                                },
-                                "included": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "article"
-                ],
-                "description": "Create an article",
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Article resource to be created",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "data": {
-                                    "$ref": "#/definitions/article"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "type": "object"
-                                },
-                                "links": {
-                                    "type": "object"
-                                },
-                                "data": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/article"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/articles/{id}": {
-            "get": {
-                "tags": [
-                    "article"
-                ],
-                "description": "Find article by id",
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/fieldsArticle"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsPeople"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsComment"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsTag"
-                    },
-                    {
-                        "$ref": "#/parameters/include"
-                    },
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "links",
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "$ref": "#/definitions/meta"
-                                },
-                                "links": {
-                                    "$ref": "#/definitions/links"
-                                },
-                                "data": {
-                                    "$ref": "#/definitions/article"
-                                },
-                                "included": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "article"
-                ],
-                "description": "Delete an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to delete",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "type": "object"
-                                },
-                                "links": {
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "article"
-                ],
-                "description": "Update an existing article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to update",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "body",
-                        "in": "body",
-                        "description": "New or partial article resource",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "data": {
-                                    "$ref": "#/definitions/article"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "type": "object"
-                                },
-                                "links": {
-                                    "type": "object"
-                                },
-                                "data": {
-                                    "$ref": "#/definitions/article"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/articles/{id}/author": {
-            "get": {
-                "tags": [
-                    "article",
-                    "people"
-                ],
-                "description": "Get the author of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsPeople"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "links",
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "$ref": "#/definitions/meta"
-                                },
-                                "links": {
-                                    "$ref": "#/definitions/links"
-                                },
-                                "data": {
-                                    "$ref": "#/definitions/people"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/articles/{id}/tag": {
-            "get": {
-                "tags": [
-                    "article",
-                    "tag"
-                ],
-                "description": "Get the tag of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsTag"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "links",
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "$ref": "#/definitions/meta"
-                                },
-                                "links": {
-                                    "$ref": "#/definitions/links"
-                                },
-                                "data": {
-                                    "$ref": "#/definitions/tag"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/articles/{id}/comments": {
-            "get": {
-                "tags": [
-                    "article",
-                    "comment"
-                ],
-                "description": "Get the list of comments of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "$ref": "#/parameters/fieldsComment"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "links",
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object"
-                                },
-                                "meta": {
-                                    "$ref": "#/definitions/meta"
-                                },
-                                "links": {
-                                    "$ref": "#/definitions/links"
-                                },
-                                "data": {
-                                    "$ref": "#/definitions/comment"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/articles/{id}/relationships/author": {
-            "get": {
-                "tags": [
-                    "article",
-                    "people"
-                ],
-                "description": "Get the author relationship of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/toOneRelationship"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "article",
-                    "people"
-                ],
-                "description": "Update the author relationship of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "An author relationship",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/toOneRelationship"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object",
-                                    "required": [
-                                        "version"
-                                    ],
-                                    "properties": {
-                                        "version": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "meta": {
-                                    "type": "object"
-                                },
-                                "links": {
-                                    "type": "object"
-                                },
-                                "data": {
-                                    "$ref": "#/definitions/toOneRelationship"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/articles/{id}/relationships/tag": {
-            "get": {
-                "tags": [
-                    "article",
-                    "tag"
-                ],
-                "description": "Get the tag relationship of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/toOneRelationship"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "article",
-                    "tag"
-                ],
-                "description": "Update the tag relationship of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "A tag relationship",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/toOneRelationship"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object",
-                                    "required": [
-                                        "version"
-                                    ],
-                                    "properties": {
-                                        "version": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "meta": {
-                                    "type": "object"
-                                },
-                                "links": {
-                                    "type": "object"
-                                },
-                                "data": {
-                                    "$ref": "#/definitions/toOneRelationship"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/articles/{id}/relationships/comment": {
-            "get": {
-                "tags": [
-                    "article",
-                    "comment"
-                ],
-                "description": "Get the comment relationships list of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "$ref": "#/definitions/toManyRelationship"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "article",
-                    "comment"
-                ],
-                "description": "Update the comment relationships list of an article",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Article id to fetch",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "A comment relationship list",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/toManyRelationship"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "data"
-                            ],
-                            "properties": {
-                                "jsonapi": {
-                                    "type": "object",
-                                    "required": [
-                                        "version"
-                                    ],
-                                    "properties": {
-                                        "version": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "meta": {
-                                    "type": "object"
-                                },
-                                "links": {
-                                    "type": "object"
-                                },
-                                "data": {
-                                    "$ref": "#/definitions/toManyRelationship"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "parameters": {
-        "fieldsArticle": {
-            "name": "fields[article]",
-            "in": "query",
-            "description": "Limit response payloads for the article resource type",
-            "type": "string"
-        },
-        "fieldsPeople": {
-            "name": "fields[people]",
-            "in": "query",
-            "description": "Limit response payloads for the people resource type",
-            "type": "string"
-        },
-        "fieldsComment": {
-            "name": "fields[comment]",
-            "in": "query",
-            "description": "Limit response payloads for the comment resource type",
-            "type": "string"
-        },
-        "fieldsTag": {
-            "name": "fields[tag]",
-            "in": "query",
-            "description": "Limit response payloads for the tag resource type",
-            "type": "string"
-        },
-        "sort": {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort resource collections according to one or more fields by allowing comma-separated (',') sort fields.\n\n http://jsonapi.org/format/#fetching-sorting",
-            "type": "string"
-        },
-        "pageNumber": {
-            "name": "page[number]",
-            "in": "query",
-            "description": "Page-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-        },
-        "pageSize": {
-            "name": "page[size]",
-            "in": "query",
-            "description": "Page-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-        },
-        "pageOffset": {
-            "name": "page[offset]",
-            "in": "query",
-            "description": "Offset-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-        },
-        "pageLimit": {
-            "name": "page[limit]",
-            "in": "query",
-            "description": "Offset-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-        },
-        "include": {
-            "name": "include",
-            "in": "query",
-            "description": "Fetch related resources (relationships) of the primary data \n\n http://jsonapi.org/format/#fetching-includes",
-            "type": "string"
-        }
-    },
-    "definitions": {
-        "toOneRelationship": {
-            "type": "object",
-            "required": [
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "json-api-express",
+    "description": "Demo app built with Express, Mongoose to demonstrate a fully working JSON API (http://jsonapi.org/) implementation"
+  },
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/vnd.api+json"
+  ],
+  "produces": [
+    "application/vnd.api+json"
+  ],
+  "paths": {
+    "/articles": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "description": "Find articles",
+        "parameters": [{
+          "$ref": "#/parameters/fieldsArticle"
+        }, {
+          "$ref": "#/parameters/fieldsPeople"
+        }, {
+          "$ref": "#/parameters/fieldsComment"
+        }, {
+          "$ref": "#/parameters/fieldsTag"
+        }, {
+          "$ref": "#/parameters/sort"
+        }, {
+          "$ref": "#/parameters/pageNumber"
+        }, {
+          "$ref": "#/parameters/pageSize"
+        }, {
+          "$ref": "#/parameters/pageOffset"
+        }, {
+          "$ref": "#/parameters/pageLimit"
+        }, {
+          "$ref": "#/parameters/include"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "arrayOfArticles",
+              "type": "object",
+              "required": [
                 "links",
                 "data"
-            ],
-            "properties": {
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
                 "meta": {
-                    "type": "object"
+                  "$ref": "#/definitions/meta"
                 },
                 "links": {
-                    "type": "object",
-                    "required": [
-                        "self"
-                    ],
-                    "properties": {
-                        "self": {
-                            "type": "string"
-                        },
-                        "related": {
-                            "type": "string"
-                        }
-                    }
+                  "$ref": "#/definitions/links"
                 },
                 "data": {
-                    "type": "object",
-                    "required": [
-                        "type",
-                        "id"
-                    ],
-                    "properties": {
-                        "type": {
-                            "type": "string"
-                        },
-                        "id": {
-                            "type": "string"
-                        }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/article"
+                  }
+                },
+                "included": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "title": "included",
+                      "type": "object"
                     }
+                  }
                 }
+              }
             }
-        },
-        "toManyRelationship": {
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "article"
+        ],
+        "description": "Create an article",
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "Article resource to be created",
+          "required": true,
+          "schema": {
+            "title": "articlePOST",
             "type": "object",
             "required": [
-                "links",
-                "data"
+              "data"
             ],
             "properties": {
+              "data": {
+                "$ref": "#/definitions/article"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articlePOST",
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
                 "meta": {
-                    "type": "object"
+                  "type": "object"
                 },
                 "links": {
-                    "type": "object",
-                    "required": [
-                        "self"
-                    ],
-                    "properties": {
-                        "self": {
-                            "type": "string"
-                        },
-                        "related": {
-                            "type": "string"
-                        }
-                    }
+                  "type": "object"
                 },
                 "data": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": [
-                            "type",
-                            "id"
-                        ],
-                        "properties": {
-                            "type": {
-                                "type": "string"
-                            },
-                            "id": {
-                                "type": "string"
-                            }
-                        }
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/article"
+                  }
                 }
+              }
             }
+          }
+        }
+      }
+    },
+    "/articles/{id}": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "description": "Find article by id",
+        "parameters": [{
+          "$ref": "#/parameters/fieldsArticle"
+        }, {
+          "$ref": "#/parameters/fieldsPeople"
+        }, {
+          "$ref": "#/parameters/fieldsComment"
+        }, {
+          "$ref": "#/parameters/fieldsTag"
+        }, {
+          "$ref": "#/parameters/include"
+        }, {
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articleGET",
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "$ref": "#/definitions/article"
+                },
+                "included": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "article"
+        ],
+        "description": "Delete an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to delete",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articleDELETE",
+              "type": "object",
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "article"
+        ],
+        "description": "Update an existing article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to update",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "body",
+          "in": "body",
+          "description": "New or partial article resource",
+          "required": true,
+          "schema": {
+            "title": "articlePATCH",
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/definitions/article"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articlePATCH",
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "$ref": "#/definitions/article"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/author": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "description": "Get the author of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }, {
+          "$ref": "#/parameters/fieldsPeople"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articleAuthor",
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "$ref": "#/definitions/people"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/tag": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "description": "Get the tag of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }, {
+          "$ref": "#/parameters/fieldsTag"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articleTags",
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "$ref": "#/definitions/tag"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/comments": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "description": "Get the list of comments of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }, {
+          "$ref": "#/parameters/fieldsComment"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articleComments",
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "$ref": "#/definitions/comment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/relationships/author": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "description": "Get the author relationship of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/toOneRelationship"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "article"
+        ],
+        "description": "Update the author relationship of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }, {
+          "in": "body",
+          "name": "body",
+          "description": "An author relationship",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/toOneRelationship"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articleAuthorRelationship",
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object",
+                  "required": [
+                    "version"
+                  ],
+                  "properties": {
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "$ref": "#/definitions/toOneRelationship"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/relationships/tag": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "description": "Get the tag relationship of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/toOneRelationship"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "article"
+        ],
+        "description": "Update the tag relationship of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }, {
+          "in": "body",
+          "name": "body",
+          "description": "A tag relationship",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/toOneRelationship"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articleTagsRelationship",
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object",
+                  "required": [
+                    "version"
+                  ],
+                  "properties": {
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "$ref": "#/definitions/toOneRelationship"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/relationships/comment": {
+      "get": {
+        "tags": [
+          "article"
+        ],
+        "description": "Get the comment relationships list of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/toManyRelationship"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "article"
+        ],
+        "description": "Update the comment relationships list of an article",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Article id to fetch",
+          "required": true,
+          "type": "string"
+        }, {
+          "in": "body",
+          "name": "body",
+          "description": "A comment relationship list",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/toManyRelationship"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "articleCommentsRelationship",
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object",
+                  "required": [
+                    "version"
+                  ],
+                  "properties": {
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "$ref": "#/definitions/toManyRelationship"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/peoples": {
+      "get": {
+        "tags": [
+          "people"
+        ],
+        "description": "Find peoples",
+        "parameters": [{
+          "$ref": "#/parameters/fieldsPeople"
+        }, {
+          "$ref": "#/parameters/sort"
+        }, {
+          "$ref": "#/parameters/pageNumber"
+        }, {
+          "$ref": "#/parameters/pageSize"
+        }, {
+          "$ref": "#/parameters/pageOffset"
+        }, {
+          "$ref": "#/parameters/pageLimit"
+        }, {
+          "$ref": "#/parameters/include"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "arrayOfPeople",
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/people"
+                  }
+                },
+                "included": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "people"
+        ],
+        "description": "Create a people",
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "People resource to be created",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/definitions/people"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "schema": {
+              "title": "peoplePost",
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/people"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/peoples/{id}": {
+      "get": {
+        "tags": [
+          "people"
+        ],
+        "description": "Find people by id",
+        "parameters": [{
+          "$ref": "#/parameters/fieldsPeople"
+        }, {
+          "name": "id",
+          "in": "path",
+          "description": "People id to fetch",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "peopleGET",
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "$ref": "#/definitions/people"
+                },
+                "included": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "people"
+        ],
+        "description": "Delete a people",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "People id to delete",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "peopleDelete",
+              "type": "object",
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "people"
+        ],
+        "description": "Update an existing people",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "People id to update",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "body",
+          "in": "body",
+          "description": "New or partial people resource",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/definitions/people"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "peoplePATCH",
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "$ref": "#/definitions/people"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags": {
+      "get": {
+        "tags": [
+          "tag"
+        ],
+        "description": "Find tags",
+        "parameters": [{
+          "$ref": "#/parameters/fieldsTag"
+        }, {
+          "$ref": "#/parameters/sort"
+        }, {
+          "$ref": "#/parameters/pageNumber"
+        }, {
+          "$ref": "#/parameters/pageSize"
+        }, {
+          "$ref": "#/parameters/pageOffset"
+        }, {
+          "$ref": "#/parameters/pageLimit"
+        }, {
+          "$ref": "#/parameters/include"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "title": "ArrayOfTags",
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/tag"
+                  }
+                },
+                "included": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tag"
+        ],
+        "description": "Create a tag",
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "Tag resource to be created",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/definitions/tag"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/people"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags/{id}": {
+      "get": {
+        "tags": [
+          "tag"
+        ],
+        "description": "Find tag by id",
+        "parameters": [{
+          "$ref": "#/parameters/fieldsTag"
+        }, {
+          "name": "id",
+          "in": "path",
+          "description": "Tag id to fetch",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "$ref": "#/definitions/tag"
+                },
+                "included": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tag"
+        ],
+        "description": "Delete a tag",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Tag id to delete",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "tag"
+        ],
+        "description": "Update an existing tag",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Tag id to update",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "body",
+          "in": "body",
+          "description": "New or partial tag resource",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/definitions/tag"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "$ref": "#/definitions/tag"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments": {
+      "get": {
+        "tags": [
+          "comment"
+        ],
+        "description": "Find comments",
+        "parameters": [{
+          "$ref": "#/parameters/fieldsComment"
+        }, {
+          "$ref": "#/parameters/sort"
+        }, {
+          "$ref": "#/parameters/pageNumber"
+        }, {
+          "$ref": "#/parameters/pageSize"
+        }, {
+          "$ref": "#/parameters/pageOffset"
+        }, {
+          "$ref": "#/parameters/pageLimit"
+        }, {
+          "$ref": "#/parameters/include"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/comment"
+                  }
+                },
+                "included": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "comment"
+        ],
+        "description": "Create a comment",
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "Comment resource to be created",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/definitions/comment"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/comment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{id}": {
+      "get": {
+        "tags": [
+          "comment"
+        ],
+        "description": "Find comment by id",
+        "parameters": [{
+          "$ref": "#/parameters/fieldsComment"
+        }, {
+          "name": "id",
+          "in": "path",
+          "description": "Comment id to fetch",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "required": [
+                "links",
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "$ref": "#/definitions/meta"
+                },
+                "links": {
+                  "$ref": "#/definitions/links"
+                },
+                "data": {
+                  "$ref": "#/definitions/comment"
+                },
+                "included": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "comment"
+        ],
+        "description": "Delete a comment",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Comment id to delete",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "comment"
+        ],
+        "description": "Update an existing comment",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Comment id to update",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "body",
+          "in": "body",
+          "description": "New or partial comment resource",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/definitions/comment"
+              }
+            }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "jsonapi": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                },
+                "data": {
+                  "$ref": "#/definitions/comment"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "fieldsArticle": {
+      "name": "fields[article]",
+      "in": "query",
+      "description": "Limit response payloads for the article resource type",
+      "type": "string"
+    },
+    "fieldsPeople": {
+      "name": "fields[people]",
+      "in": "query",
+      "description": "Limit response payloads for the people resource type",
+      "type": "string"
+    },
+    "fieldsComment": {
+      "name": "fields[comment]",
+      "in": "query",
+      "description": "Limit response payloads for the comment resource type",
+      "type": "string"
+    },
+    "fieldsTag": {
+      "name": "fields[tag]",
+      "in": "query",
+      "description": "Limit response payloads for the tag resource type",
+      "type": "string"
+    },
+    "sort": {
+      "name": "sort",
+      "in": "query",
+      "description": "Sort resource collections according to one or more fields by allowing comma-separated (',') sort fields.\n\n http://jsonapi.org/format/#fetching-sorting",
+      "type": "string"
+    },
+    "pageNumber": {
+      "name": "page[number]",
+      "in": "query",
+      "description": "Page-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
+      "required": false,
+      "type": "integer",
+      "format": "int32"
+    },
+    "pageSize": {
+      "name": "page[size]",
+      "in": "query",
+      "description": "Page-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
+      "required": false,
+      "type": "integer",
+      "format": "int32"
+    },
+    "pageOffset": {
+      "name": "page[offset]",
+      "in": "query",
+      "description": "Offset-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
+      "required": false,
+      "type": "integer",
+      "format": "int32"
+    },
+    "pageLimit": {
+      "name": "page[limit]",
+      "in": "query",
+      "description": "Offset-based pagination strategy.\n\n http://jsonapi.org/format/#fetching-pagination",
+      "required": false,
+      "type": "integer",
+      "format": "int32"
+    },
+    "include": {
+      "name": "include",
+      "in": "query",
+      "description": "Fetch related resources (relationships) of the primary data \n\n http://jsonapi.org/format/#fetching-includes",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "resourceObjectIdentifier": {
+      "title": "resourceObjectIdentifier",
+      "type": "object",
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
         },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "toOneRelationship": {
+      "title": "toOneRelationship",
+      "type": "object",
+      "required": [
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/resourceObjectIdentifier"
+        }
+      }
+    },
+    "toManyRelationship": {
+      "title": "toManyRelationship",
+      "type": "object",
+      "required": [
+        "links",
+        "data"
+      ],
+      "properties": {
         "meta": {
-            "type": "object",
-            "properties": {
-                "total": {
-                    "type": "integer"
-                },
-                "totalPage": {
-                    "type": "integer"
-                },
-                "count": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "number": {
-                    "type": "integer"
-                },
-                "size": {
-                    "type": "integer"
-                }
-            }
+          "type": "object"
         },
         "links": {
+          "schema": {
+            "title": "relationshipLinks",
             "type": "object",
             "required": [
-                "self"
+              "self"
             ],
             "properties": {
-                "self": {
-                    "type": "string"
-                },
-                "first": {
-                    "type": "string"
-                },
-                "last": {
-                    "type": "string"
-                },
-                "next": {
-                    "type": "string"
-                },
-                "prev": {
-                    "type": "string"
-                }
+              "self": {
+                "type": "string"
+              },
+              "related": {
+                "type": "string"
+              }
             }
+          }
         },
-        "article": {
-            "description": "Article resource",
-            "type": "object",
-            "required": [
-                "type",
-                "attributes"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "attributes": {
-                    "type": "object",
-                    "properties": {
-                        "title": {
-                            "type": "string"
-                        },
-                        "body": {
-                            "type": "string"
-                        },
-                        "created": {
-                            "type": "string",
-                            "format": "date-time"
-                        }
-                    }
-                },
-                "relationships": {
-                    "type": "object",
-                    "properties": {
-                        "author": {
-                            "$ref": "#/definitions/toOneRelationship"
-                        },
-                        "tag": {
-                            "$ref": "#/definitions/toOneRelationship"
-                        },
-                        "comments": {
-                            "$ref": "#/definitions/toManyRelationship"
-                        }
-                    }
-                },
-                "links": {
-                    "$ref": "#/definitions/links"
-                }
-            }
-        },
-        "people": {
-            "description": "People resource",
-            "type": "object",
-            "required": [
-                "id",
-                "type",
-                "attributes"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "attributes": {
-                    "type": "object",
-                    "properties": {
-                        "firstName": {
-                            "type": "string"
-                        },
-                        "lastName": {
-                            "type": "string"
-                        },
-                        "email": {
-                            "type": "string"
-                        },
-                        "age": {
-                            "type": "integer",
-                            "format": "int32"
-                        },
-                        "gender": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "links": {
-                    "$ref": "#/definitions/links"
-                }
-            }
-        },
-        "tag": {
-            "description": "Tag resource",
-            "type": "object",
-            "required": [
-                "id",
-                "type",
-                "attributes"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "attributes": {
-                    "type": "object",
-                    "properties": {
-                        "title": {
-                            "type": "string"
-                        },
-                        "created": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "links": {
-                    "$ref": "#/definitions/links"
-                }
-            }
-        },
-        "comment": {
-            "description": "Comment resource",
-            "type": "object",
-            "required": [
-                "id",
-                "type",
-                "attributes"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "attributes": {
-                    "type": "object",
-                    "properties": {
-                        "body": {
-                            "type": "string"
-                        },
-                        "created": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "relationships": {
-                    "type": "object",
-                    "properties": {
-                        "author": {
-                            "$ref": "#/definitions/toOneRelationship"
-                        }
-                    }
-                },
-                "links": {
-                    "$ref": "#/definitions/links"
-                }
-            }
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/resourceObjectIdentifier"
+          }
         }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "totalPage": {
+          "type": "integer"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "offset": {
+          "type": "integer"
+        },
+        "limit": {
+          "type": "integer"
+        },
+        "number": {
+          "type": "integer"
+        },
+        "size": {
+          "type": "integer"
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "self"
+      ],
+      "properties": {
+        "self": {
+          "type": "string"
+        },
+        "first": {
+          "type": "string"
+        },
+        "last": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        },
+        "prev": {
+          "type": "string"
+        }
+      }
+    },
+    "article": {
+      "description": "Article resource",
+      "title": "article",
+      "type": "object",
+      "required": [
+        "type",
+        "attributes"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "default": "article"
+        },
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "schema": {
+            "type": "object",
+            "title": "attributes",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              },
+              "created": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "relationships": {
+          "schema": {
+            "type": "object",
+            "title": "relationships",
+            "required": [
+              "author"
+            ],
+            "properties": {
+              "author": {
+                "$ref": "#/definitions/toOneRelationship"
+              },
+              "tag": {
+                "$ref": "#/definitions/toOneRelationship"
+              },
+              "comments": {
+                "$ref": "#/definitions/toManyRelationship"
+              }
+            }
+          }
+        }
+      }
+    },
+    "people": {
+      "description": "People resource",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "attributes": {
+          "schema": {
+            "title": "attributes",
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "age": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "gender": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "tag": {
+      "description": "Tag resource",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "attributes": {
+          "schema": {
+            "title": "attributes",
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "created": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "comment": {
+      "description": "Comment resource",
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "attributes": {
+          "schema": {
+            "title": "attributes",
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "string"
+              },
+              "created": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "author": {
+              "$ref": "#/definitions/toOneRelationship"
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
     }
+  }
 }

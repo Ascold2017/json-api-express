@@ -18,7 +18,7 @@ var deleteRelationship = require('../middlewares/deleteRelationship');
 var router = express.Router();
 
 router.get('/articles', find('article', ArticleModel));
-router.post('/articles', post('articles', ArticleModel));
+router.post('/articles', post('article', ArticleModel));
 router.get('/articles/:id', get('article', ArticleModel));
 router.patch('/articles/:id', patch('article', ArticleModel));
 router.get('/articles/:id/author', findRelationship('article', ArticleModel, 'author', 'people', PeopleModel));

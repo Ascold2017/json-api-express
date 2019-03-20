@@ -3,8 +3,6 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var routes = require('./src/routes');
 var initDb = require('./src/utils/init-db');
-const ee = require('@nauma/eventemitter');
-global.ENGINE = new ee.EventEmitter('engine');
 
 /**
  * Mongoose configuration

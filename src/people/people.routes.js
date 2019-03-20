@@ -1,14 +1,11 @@
 var express = require('express');
 
-var PeopleModel = require('../people/people.model');
-
-var find = require('../middlewares/find');
-var get = require('../middlewares/get');
-var getRelationship = require('../middlewares/getRelationship');
+const getPeople = require('./controllers/getPeople');
+const findPeople = require('./controllers/findPeople');
 
 var router = express.Router();
 
-router.get('/peoples', find('people', PeopleModel));
-router.get('/peoples/:id', get('people', PeopleModel));
+router.get('/peoples', findPeople);
+router.get('/peoples/:id', getPeople);
 
 module.exports = router;

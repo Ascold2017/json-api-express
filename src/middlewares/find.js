@@ -5,10 +5,8 @@ var jsonApiMongoParser = require('../jsonapiMongoParser');
 var mongooseAdapter = require('../lib/mongoose-adapter');
 var Pagination = require('../lib/pagination');
 
-module.exports = function(resource, model) {
-  return middleware;
-
-  function middleware(req, res, next) {
+module.exports = function(resource, model, params) {
+  return new Promise((resolve, reject) => {
 
     // Default pagination
     var defaultPagination = {
@@ -16,17 +14,19 @@ module.exports = function(resource, model) {
       limit: 50
     };
 
-    req.query.page = req.query.page || defaultPagination;
+    params = params || { query: {}, originalUrl: null };
+    
+    params.query.page = params.query.page || defaultPagination;
 
     // Query
-    mongooseAdapter.find(model, jsonApiMongoParser.parse(resource, req.query), function(err, results) {
+    mongooseAdapter.find(model, jsonApiMongoParser.parse(resource, params.query), function(err, results) {
       if (err) {
-        next(err);
+        return reject(err)
       }
 
       // Pagination links
-      var pagination = new Pagination(req.query.page, results.total);
-      var paginationLinks = pagination.getLinks(req.originalUrl);
+      var pagination = new Pagination(params.query.page, results.total);
+      var paginationLinks = pagination.getLinks(params.originalUrl);
 
       // Extra options
       var extraOptions = _.assign({
@@ -36,8 +36,7 @@ module.exports = function(resource, model) {
         _.pick(paginationLinks, ['self', 'first', 'last', 'prev', 'next']));
 
       // Serialize
-      res.setHeader('Content-Type', 'application/vnd.api+json; charset=utf-8');
-      res.send(jsonapiSerializer.serialize(resource, results.data, extraOptions));
+      resolve(jsonapiSerializer.serialize(resource, results.data, extraOptions))
     });
-  }
+  })
 }

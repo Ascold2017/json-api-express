@@ -3,6 +3,8 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var routes = require('./src/routes');
 var initDb = require('./src/utils/init-db');
+const ee = require('@nauma/eventemitter');
+global.ENGINE = new ee.EventEmitter('engine');
 
 /**
  * Mongoose configuration
@@ -43,7 +45,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Bootstrap routes
-app.use(routes);
+app.use('/api/v1', routes);
 
 // Once database open, start server
 mongoose.connection.once('open', function callback() {

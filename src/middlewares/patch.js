@@ -2,13 +2,13 @@ var jsonapiSerializer = require('../jsonapiSerializer');
 var jsonApiMongoParser = require('../jsonapiMongoParser');
 var mongooseAdapter = require('../lib/mongoose-adapter');
 
-module.exports = function(resource, model) {
-  return middleware;
-
-  function middleware(req, res, next) {
-    mongooseAdapter.findByIdAndUpdate(model, req.params.id, req.body.data, function(err, document) {
-      res.setHeader('Content-Type', 'application/vnd.api+json; charset=utf-8');
-      res.send(jsonapiSerializer.serialize(resource, document.toObject()));
+module.exports = function(resource, model, id, data) {
+  
+  return new Promise((resolve, reject) => {
+    mongooseAdapter.findByIdAndUpdate(model, id, data, function(err, document) {
+      if(err) return reject(err);
+      resolve(jsonapiSerializer.serialize(resource, document.toObject()));
     });
-  }
+  })
+
 }
